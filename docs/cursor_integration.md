@@ -12,7 +12,7 @@ Ce document explique comment configurer et utiliser le MCP LSP Go avec l'éditeu
 
 1. Clonez ce dépôt:
    ```bash
-   git clone https://github.com/hloiseau/mcplspgo.git
+   git clone https://github.com/hloiseaufcms/mcplspgo.git
    cd mcplspgo
    ```
 

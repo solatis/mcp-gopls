@@ -93,7 +93,7 @@ go build -o simple_client examples/simple_client.go
 ## Développement
 
 ```bash
-git clone https://github.com/hloiseau/mcplspgo.git
+git clone https://github.com/hloiseaufcms/mcplspgo.git
 cd mcplspgo
 go mod tidy
 go run cmd/mcplspgo/main.go

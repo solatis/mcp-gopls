@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/hloiseaufcms/mcplspgo/pkg/mcp"
+	"github.com/hloiseaufcms/MCPLSPGO/pkg/mcp"
 )
 
 func main() {
