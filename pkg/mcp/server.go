@@ -37,7 +37,7 @@ func (s *Server) ServeStdio() error {
 	for {
 		var request struct {
 			JSONRPC string          `json:"jsonrpc"`
-			ID      any             `json:"id,omitempty"`
+			ID      interface{}     `json:"id,omitempty"`
 			Method  string          `json:"method"`
 			Params  json.RawMessage `json:"params,omitempty"`
 		}
@@ -46,48 +46,51 @@ func (s *Server) ServeStdio() error {
 			if err == io.EOF {
 				return nil // Fin normale
 			}
+			log.Printf("Error decoding request: %v", err)
 			return err
 		}
 
+		log.Printf("Received request: %+v", request)
+
 		// Gérer les différentes méthodes du protocole MCP
-		var response any
+		var response interface{}
 
 		switch request.Method {
 		case "initialize":
-			response = map[string]any{
+			response = map[string]interface{}{
 				"jsonrpc": "2.0",
 				"id":      request.ID,
-				"result": map[string]any{
-					"serverInfo": map[string]any{
+				"result": map[string]interface{}{
+					"serverInfo": map[string]interface{}{
 						"name":    "go-lsp-mcp",
 						"version": "1.0.0",
 					},
 					"protocolVersion": "2024-11-05",
-					"capabilities": map[string]any{
-						"tools": map[string]any{},
+					"capabilities": map[string]interface{}{
+						"tools": map[string]interface{}{},
 					},
 				},
 			}
 
 		case "listTools":
 			// Retourner la liste des outils disponibles
-			tools := []map[string]any{
+			tools := []map[string]interface{}{
 				{
 					"name":        "get_definition",
 					"description": "Obtient la définition d'un symbole à la position donnée",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"file_path", "line", "column"},
-						"properties": map[string]any{
-							"file_path": map[string]any{
+						"properties": map[string]interface{}{
+							"file_path": map[string]interface{}{
 								"type":        "string",
 								"description": "Chemin du fichier",
 							},
-							"line": map[string]any{
+							"line": map[string]interface{}{
 								"type":        "integer",
 								"description": "Numéro de ligne (1-indexé)",
 							},
-							"column": map[string]any{
+							"column": map[string]interface{}{
 								"type":        "integer",
 								"description": "Numéro de colonne (1-indexé)",
 							},
@@ -97,19 +100,19 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "get_references",
 					"description": "Trouve toutes les références à un symbole",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"file_path", "line", "column"},
-						"properties": map[string]any{
-							"file_path": map[string]any{
+						"properties": map[string]interface{}{
+							"file_path": map[string]interface{}{
 								"type":        "string",
 								"description": "Chemin du fichier",
 							},
-							"line": map[string]any{
+							"line": map[string]interface{}{
 								"type":        "integer",
 								"description": "Numéro de ligne (1-indexé)",
 							},
-							"column": map[string]any{
+							"column": map[string]interface{}{
 								"type":        "integer",
 								"description": "Numéro de colonne (1-indexé)",
 							},
@@ -119,11 +122,11 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "check_diagnostics",
 					"description": "Vérifie les diagnostics (erreurs, avertissements) dans un fichier",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"file_path"},
-						"properties": map[string]any{
-							"file_path": map[string]any{
+						"properties": map[string]interface{}{
+							"file_path": map[string]interface{}{
 								"type":        "string",
 								"description": "Chemin du fichier",
 							},
@@ -133,19 +136,19 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "get_go_version",
 					"description": "Obtient des informations sur la dernière version de Go",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":       "object",
-						"properties": map[string]any{},
+						"properties": map[string]interface{}{},
 					},
 				},
 				{
 					"name":        "check_deprecated_features",
 					"description": "Vérifie les fonctionnalités obsolètes dans un fichier",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"file_path"},
-						"properties": map[string]any{
-							"file_path": map[string]any{
+						"properties": map[string]interface{}{
+							"file_path": map[string]interface{}{
 								"type":        "string",
 								"description": "Chemin du fichier",
 							},
@@ -155,11 +158,11 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "get_best_practices",
 					"description": "Récupère les meilleures pratiques Go",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"aspect"},
-						"properties": map[string]any{
-							"aspect": map[string]any{
+						"properties": map[string]interface{}{
+							"aspect": map[string]interface{}{
 								"type":        "string",
 								"description": "Aspect des meilleures pratiques (all, latest_version, recommended_features, deprecated_features, code_style)",
 							},
@@ -169,11 +172,11 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "search_documentation",
 					"description": "Recherche dans la documentation Go",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"query"},
-						"properties": map[string]any{
-							"query": map[string]any{
+						"properties": map[string]interface{}{
+							"query": map[string]interface{}{
 								"type":        "string",
 								"description": "Terme de recherche",
 							},
@@ -183,11 +186,11 @@ func (s *Server) ServeStdio() error {
 				{
 					"name":        "format_code",
 					"description": "Formate un morceau de code Go",
-					"parameters": map[string]any{
+					"parameters": map[string]interface{}{
 						"type":     "object",
 						"required": []string{"code"},
-						"properties": map[string]any{
-							"code": map[string]any{
+						"properties": map[string]interface{}{
+							"code": map[string]interface{}{
 								"type":        "string",
 								"description": "Code Go à formater",
 							},
@@ -196,10 +199,10 @@ func (s *Server) ServeStdio() error {
 				},
 			}
 
-			response = map[string]any{
+			response = map[string]interface{}{
 				"jsonrpc": "2.0",
 				"id":      request.ID,
-				"result": map[string]any{
+				"result": map[string]interface{}{
 					"tools": tools,
 				},
 			}
@@ -211,18 +214,11 @@ func (s *Server) ServeStdio() error {
 			}
 			if err := json.Unmarshal(request.Params, &params); err != nil {
 				// Erreur de décodage des paramètres
-				response = map[string]any{
-					"jsonrpc": "2.0",
-					"id":      request.ID,
-					"error": map[string]any{
-						"code":    -32602,
-						"message": "Invalid params: " + err.Error(),
-					},
-				}
+				response = s.createErrorResponse(request.ID, -32602, "Invalid params: "+err.Error())
 				break
 			}
 
-			var result any
+			var result interface{}
 			var err error
 
 			switch params.Tool {
@@ -311,10 +307,10 @@ func (s *Server) ServeStdio() error {
 			if err != nil {
 				response = s.createErrorResponse(request.ID, -32000, err.Error())
 			} else if response == nil {
-				response = map[string]any{
+				response = map[string]interface{}{
 					"jsonrpc": "2.0",
 					"id":      request.ID,
-					"result": map[string]any{
+					"result": map[string]interface{}{
 						"content": result,
 					},
 				}
@@ -325,8 +321,18 @@ func (s *Server) ServeStdio() error {
 			response = s.createErrorResponse(request.ID, -32601, "Method not found: "+request.Method)
 		}
 
+		// S'assurer que l'ID n'est jamais null (utiliser 0 comme valeur par défaut)
 		if response != nil {
+			respMap, isMap := response.(map[string]interface{})
+			if isMap {
+				if respMap["id"] == nil {
+					respMap["id"] = 0
+				}
+			}
+
+			log.Printf("Sending response: %+v", response)
 			if err := encoder.Encode(response); err != nil {
+				log.Printf("Error encoding response: %v", err)
 				return err
 			}
 		}
@@ -334,11 +340,16 @@ func (s *Server) ServeStdio() error {
 }
 
 // createErrorResponse crée une réponse d'erreur JSON-RPC
-func (s *Server) createErrorResponse(id any, code int, message string) map[string]any {
-	return map[string]any{
+func (s *Server) createErrorResponse(id interface{}, code int, message string) map[string]interface{} {
+	// Assurer que l'ID n'est jamais null
+	if id == nil {
+		id = 0
+	}
+
+	return map[string]interface{}{
 		"jsonrpc": "2.0",
 		"id":      id,
-		"error": map[string]any{
+		"error": map[string]interface{}{
 			"code":    code,
 			"message": message,
 		},
@@ -362,7 +373,7 @@ func (s *Server) HandleRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var response any
+	var response interface{}
 	var err error
 
 	switch request.Function {
@@ -468,33 +479,33 @@ func (s *Server) Close() {
 
 // Handlers pour les différentes fonctions
 
-func (s *Server) handleGetDefinition(filePath string, line, column int) (any, error) {
+func (s *Server) handleGetDefinition(filePath string, line, column int) (interface{}, error) {
 	if s.lspClient == nil {
 		return nil, ErrLSPClientNotInitialized
 	}
 	return s.lspClient.GetDefinition(filePath, line, column)
 }
 
-func (s *Server) handleGetReferences(filePath string, line, column int) (any, error) {
+func (s *Server) handleGetReferences(filePath string, line, column int) (interface{}, error) {
 	if s.lspClient == nil {
 		return nil, ErrLSPClientNotInitialized
 	}
 	return s.lspClient.GetReferences(filePath, line, column)
 }
 
-func (s *Server) handleCheckDiagnostics(filePath string) (any, error) {
+func (s *Server) handleCheckDiagnostics(filePath string) (interface{}, error) {
 	if s.lspClient == nil {
 		return nil, ErrLSPClientNotInitialized
 	}
 	return s.lspClient.GetDiagnostics(filePath)
 }
 
-func (s *Server) handleGetGoVersion() (any, error) {
+func (s *Server) handleGetGoVersion() (interface{}, error) {
 	// Utilise notre base de connaissances pour retourner la dernière version et les fonctionnalités récentes
 	return GetBestPractices("latest_version")
 }
 
-func (s *Server) handleCheckDeprecatedFeatures(filePath string) (any, error) {
+func (s *Server) handleCheckDeprecatedFeatures(filePath string) (interface{}, error) {
 	if s.lspClient == nil {
 		return nil, ErrLSPClientNotInitialized
 	}
@@ -506,25 +517,25 @@ func (s *Server) handleCheckDeprecatedFeatures(filePath string) (any, error) {
 		return nil, err
 	}
 
-	return map[string]any{
+	return map[string]interface{}{
 		"file_path":           filePath,
 		"deprecated_features": deprecated,
 		"suggestions":         []string{},
 	}, nil
 }
 
-func (s *Server) handleGetBestPractices(aspect string) (any, error) {
+func (s *Server) handleGetBestPractices(aspect string) (interface{}, error) {
 	return GetBestPractices(aspect)
 }
 
-func (s *Server) handleSearchDocumentation(query string) (any, error) {
+func (s *Server) handleSearchDocumentation(query string) (interface{}, error) {
 	// Simuler une recherche dans la documentation Go
 	// Une véritable implémentation pourrait interroger pkg.go.dev ou une base locale
 
 	// Résultats fictifs pour démonstration
-	return map[string]any{
+	return map[string]interface{}{
 		"query": query,
-		"results": []map[string]any{
+		"results": []map[string]interface{}{
 			{
 				"title":       "Documentation Go pour " + query,
 				"description": "Documentation officielle pour " + query,
@@ -534,11 +545,11 @@ func (s *Server) handleSearchDocumentation(query string) (any, error) {
 	}, nil
 }
 
-func (s *Server) handleFormatCode(code string) (any, error) {
+func (s *Server) handleFormatCode(code string) (interface{}, error) {
 	// Dans une véritable implémentation, utiliserait gofmt ou goimports
 	// Pour cet exemple, retourne simplement le code inchangé
 
-	return map[string]any{
+	return map[string]interface{}{
 		"formatted_code": code,
 		"message":        "Code formatting not yet implemented. Would use goimports in a full implementation.",
 	}, nil
