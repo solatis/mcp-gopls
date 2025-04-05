@@ -35,7 +35,7 @@ Le but de ce MCP est d'aider les assistants d'IA à:
 ## Installation
 
 ```bash
-go install github.com/hloiseau/mcplspgo/cmd/mcplspgo@latest
+go install github.com/hloiseaufcms/mcplspgo/cmd/mcplspgo@latest
 ```
 
 ## Configuration avec Cursor

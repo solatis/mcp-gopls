@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/hloiseau/mcplspgo/pkg/lsp"
+	"github.com/hloiseaufcms/mcplspgo/pkg/lsp"
 )
 
 // Server représente le serveur MCP qui expose les fonctionnalités LSP
