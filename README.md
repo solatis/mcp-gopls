@@ -51,7 +51,7 @@ go install github.com/hloiseaufcms/MCPLSPGO/cmd/mcplspgo@latest
 {
   "mcpServers": {
     "go-lsp-mcp": {
-      "command": "/home/hloiseau/MCPLSPGO/mcplspgo"
+      "command": "mcplspgo"
     }
   }
 } 
