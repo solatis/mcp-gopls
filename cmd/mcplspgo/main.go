@@ -1,31 +1,27 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/mcp"
+	"github.com/hloiseaufcms/MCPLSPGO/pkg/server"
 )
 
 func main() {
-	server := mcp.NewServer()
+	service, err := server.NewService()
+	if err != nil {
+		fmt.Printf("Error creating service: %v", err)
+		log.Fatalf("Error creating service: %v", err)
+	}
 
-	// MCP fonctionne sur STDIO, pas de besoin de port HTTP
-	go func() {
-		log.Println("MCP LSP Go server starting...")
-		if err := server.ServeStdio(); err != nil {
-			log.Fatalf("Error serving via STDIO: %v", err)
-		}
-	}()
+	service.RegisterTools()
 
-	// Attendre le signal d'arrêt
-	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
-	<-stop
+	if err := service.Start(); err != nil {
+		fmt.Printf("Error running service: %v", err)
+		log.Fatalf("Error running service: %v", err)
+	}
 
-	log.Println("Server shutting down...")
-	server.Close()
-	log.Println("Server stopped")
+	fmt.Println("Server shutdown normally")
+	os.Exit(0)
 }

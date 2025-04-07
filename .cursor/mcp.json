@@ -1,0 +1,7 @@
+{
+  "mcpServers": {
+    "go-lsp-mcp": {
+      "command": "/home/hloiseau/MCPLSPGO/mcplspgo"
+    }
+  }
+} 

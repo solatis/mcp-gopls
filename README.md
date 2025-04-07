@@ -1,106 +1,105 @@
 # MCP LSP Go
 
-Un Model Control Protocol (MCP) pour fournir aux IA comme Claude des outils pour interagir avec le LSP (Language Server Protocol) de Go.
+A Model Context Protocol (MCP) server that allows AI assistants like Claude to interact with Go's Language Server Protocol (LSP) and benefit from advanced Go code analysis features.
 
-## Objectif
+## Overview
 
-Le but de ce MCP est d'aider les assistants d'IA à:
-- Utiliser les versions récentes et modernes de Go
-- Éviter l'utilisation de syntaxes ou fonctionnalités dépréciées
-- Suivre les meilleures pratiques actuelles de Go
-- Obtenir des informations précises sur le code Go via le LSP
+This MCP server helps AI assistants to:
 
-## Fonctionnalités
+- Use LSP to analyze Go code
+- Navigate to definitions and find references
+- Check code diagnostics
+- Get hover information for symbols
+- Get completion suggestions
 
-- Connexion au serveur LSP de Go (gopls)
-- Interrogation du LSP pour obtenir:
-  - Définitions de fonctions/types
-  - Références à des symboles
-  - Diagnostics et erreurs de code
-  - Suggestions de refactoring
-- Vérification de compatibilité avec les versions récentes de Go
-- Détection de patterns obsolètes
+## Architecture
 
-## Structure du projet
+This project uses the [mark3labs/mcp-go](https://github.com/mark3labs/mcp-go) library to implement the Model Context Protocol. The MCP integration enables seamless communication between AI assistants and Go tools.
 
-```
+The server communicates with [gopls](https://github.com/golang/tools/tree/master/gopls), the official language server for Go, via the Language Server Protocol (LSP).
+
+## Features
+
+- **LSP Integration**: Connection to Go's Language Server Protocol for code analysis
+- **Code Navigation**: Finding definitions and references in the code
+- **Code Quality**: Getting diagnostics and errors
+- **Advanced Information**: Hover information and completion suggestions
+
+## Project Structure
+
+```bash
 .
 ├── cmd
-│   └── mcplspgo        # Point d'entrée de l'application
+│   └── mcplspgo        # Application entry point
 ├── pkg
-│   ├── lsp             # Client LSP pour communiquer avec gopls
-│   └── mcp             # Implémentation du protocole MCP
+│   ├── lsp             # LSP client to communicate with gopls
+│   │   ├── client      # LSP client implementation
+│   │   └── protocol    # LSP protocol types and features
+│   ├── server          # MCP server
+│   └── tools           # MCP tools exposing LSP features
 ```
 
 ## Installation
 
 ```bash
-go install github.com/hloiseaufcms/mcplspgo/cmd/mcplspgo@latest
+go install github.com/hloiseaufcms/MCPLSPGO/cmd/mcplspgo@latest
 ```
 
-## Configuration avec Cursor
-
-Pour utiliser ce MCP avec Cursor, créez ou modifiez un fichier `.cursor/mcp-config.json` à la racine de votre projet:
+## Add to Cursor
 
 ```json
 {
   "mcpServers": {
     "go-lsp-mcp": {
-      "command": "mcplspgo",
-      "args": []
+      "command": "/home/hloiseau/MCPLSPGO/mcplspgo"
     }
   }
-}
+} 
 ```
 
-## Configuration avec Claude Desktop
+## MCP Tools
 
-Pour Claude Desktop, modifiez le fichier de configuration:
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
+The MCP server provides the following tools:
 
-Exemple de configuration:
+| Tool | Description |
+|-------|-------------|
+| `go_to_definition` | Navigate to the definition of a symbol |
+| `find_references` | Find all references to a symbol |
+| `check_diagnostics` | Get diagnostics for a file |
+| `get_hover_info` | Get detailed information about a symbol |
+| `get_completion` | Get completion suggestions at a position |
+| `analyze_coverage` | Analyze test coverage for Go code |
 
-```json
-{
-  "mcpServers": {
-    "go-lsp-mcp": {
-      "command": "mcplspgo"
-    }
-  }
-}
+## Usage Example
+
+Using the server with AI assistants that support MCP:
+
+```Markdown
+# Ask the AI to get information about the code
+Can you find the definition of the `ServeStdio` function in this project?
+
+# Ask for diagnostics
+Are there any errors in my main.go file?
+
+# Ask for information about a symbol
+What does the Context.WithTimeout function do in Go?
 ```
 
-## Utilisation avec le client d'exemple
-
-Le projet inclut un client exemple pour tester les fonctionnalités:
+## Development
 
 ```bash
-# Compiler le client d'exemple
-go build -o simple_client examples/simple_client.go
-
-# Afficher la version de Go et les fonctionnalités recommandées
-./simple_client version
-
-# Obtenir toutes les meilleures pratiques Go
-./simple_client best_practices
-
-# Lister tous les outils disponibles
-./simple_client list_tools
-```
-
-## Développement
-
-```bash
-git clone https://github.com/hloiseaufcms/mcplspgo.git
-cd mcplspgo
+git clone https://github.com/hloiseaufcms/MCPLSPGO.git
+cd MCPLSPGO
 go mod tidy
-go run cmd/mcplspgo/main.go
+go build -o mcplspgo cmd/mcplspgo/main.go
+./mcplspgo
 ```
 
-Pour plus de détails sur l'intégration avec Cursor, consultez le fichier [docs/cursor_integration.md](docs/cursor_integration.md).
+## Prerequisites
 
-## Licence
+- Go 1.24 or higher
+- gopls installed (`go install golang.org/x/tools/gopls@latest`)
 
-MIT 
+## License
+
+Apache License 2.0
