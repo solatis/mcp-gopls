@@ -10,8 +10,8 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/lsp/client"
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/tools"
+	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/client"
+	"github.com/hloiseaufcms/mcp-gopls/pkg/tools"
 )
 
 type Service struct {
@@ -22,7 +22,7 @@ type Service struct {
 }
 
 func NewService() (*Service, error) {
-	logFile, err := os.OpenFile("/tmp/mcplspgo.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile("/tmp/mcp-gopls.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
 	if err != nil {
 		log.SetOutput(os.Stdout)
 		log.Printf("Unable to open log file: %v, using stderr", err)

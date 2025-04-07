@@ -90,7 +90,7 @@ func (c *Client) initialize() error {
 	initParams := map[string]any{
 		"processId": nil,
 		"clientInfo": map[string]any{
-			"name":    "mcplspgo",
+			"name":    "mcp-gopls",
 			"version": "0.1.0",
 		},
 		"rootUri":      nil,

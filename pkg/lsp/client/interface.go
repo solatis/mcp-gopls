@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/lsp/protocol"
+	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/protocol"
 )
 
 // LSPClient définit l'interface pour un client LSP

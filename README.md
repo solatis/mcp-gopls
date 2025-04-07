@@ -30,7 +30,7 @@ The server communicates with [gopls](https://github.com/golang/tools/tree/master
 ```bash
 .
 ├── cmd
-│   └── mcplspgo        # Application entry point
+│   └── mcp-gopls        # Application entry point
 ├── pkg
 │   ├── lsp             # LSP client to communicate with gopls
 │   │   ├── client      # LSP client implementation
@@ -42,7 +42,7 @@ The server communicates with [gopls](https://github.com/golang/tools/tree/master
 ## Installation
 
 ```bash
-go install github.com/hloiseaufcms/MCPLSPGO/cmd/mcplspgo@latest
+go install github.com/hloiseaufcms/mcp-gopls/cmd/mcp-gopls@latest
 ```
 
 ## Add to Cursor
@@ -51,7 +51,7 @@ go install github.com/hloiseaufcms/MCPLSPGO/cmd/mcplspgo@latest
 {
   "mcpServers": {
     "go-lsp-mcp": {
-      "command": "mcplspgo"
+      "command": "mcp-gopls"
     }
   }
 } 
@@ -88,11 +88,11 @@ What does the Context.WithTimeout function do in Go?
 ## Development
 
 ```bash
-git clone https://github.com/hloiseaufcms/MCPLSPGO.git
-cd MCPLSPGO
+git clone https://github.com/hloiseaufcms/mcp-gopls.git
+cd mcp-gopls
 go mod tidy
-go build -o mcplspgo cmd/mcplspgo/main.go
-./mcplspgo
+go build -o mcp-gopls cmd/mcp-gopls/main.go
+./mcp-gopls
 ```
 
 ## Prerequisites

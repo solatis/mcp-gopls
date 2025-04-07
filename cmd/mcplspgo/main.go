@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/server"
+	"github.com/hloiseaufcms/mcp-gopls/pkg/server"
 )
 
 func main() {

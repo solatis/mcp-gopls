@@ -1,7 +1,7 @@
 .PHONY: build clean test
 
 # Variables
-BINARY_NAME=mcplspgo
+BINARY_NAME=mcp-gopls
 GO=go
 GOFLAGS=-v
 LDFLAGS=-ldflags="-s -w"

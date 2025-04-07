@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hloiseaufcms/MCPLSPGO/pkg/lsp/protocol"
+	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/protocol"
 )
 
 type GoplsClient struct {
@@ -207,7 +207,7 @@ func (c *GoplsClient) Initialize() error {
 	initParams := map[string]any{
 		"processId": nil,
 		"clientInfo": map[string]any{
-			"name":    "mcplspgo",
+			"name":    "mcp-gopls",
 			"version": "1.0.0",
 		},
 		"rootUri": "file:///",

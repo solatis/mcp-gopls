@@ -1,4 +1,4 @@
-module github.com/hloiseaufcms/MCPLSPGO
+module github.com/hloiseaufcms/mcp-gopls
 
 go 1.24.0
 

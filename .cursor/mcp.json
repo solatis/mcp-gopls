@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "go-lsp-mcp": {
-      "command": "mcplspgo"
+      "command": "mcp-gopls"
     }
   }
 } 
