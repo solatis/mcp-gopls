@@ -50,7 +50,7 @@ go install github.com/hloiseaufcms/mcp-gopls/cmd/mcp-gopls@latest
 ```json
 {
   "mcpServers": {
-    "go-lsp-mcp": {
+    "mcp-gopls": {
       "command": "mcp-gopls"
     }
   }
