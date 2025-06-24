@@ -13,7 +13,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/protocol"
+	"github.com/solatis/mcp-gopls/pkg/lsp/protocol"
 )
 
 type GoplsClient struct {
@@ -562,4 +562,115 @@ func (c *GoplsClient) GetCompletion(uri string, line, character int) ([]string, 
 	}
 
 	return completions, nil
+}
+
+func (c *GoplsClient) GetDocumentSymbols(uri string) ([]protocol.DocumentSymbol, error) {
+	log.Printf("🔍 Requesting document symbols for %s", uri)
+
+	if err := c.DidOpen(uri, "go", ""); err != nil {
+		log.Printf("⚠️ Warning opening document: %v", err)
+	}
+
+	time.Sleep(100 * time.Millisecond)
+
+	params := map[string]any{
+		"textDocument": map[string]any{
+			"uri": uri,
+		},
+	}
+
+	resp, err := c.call("textDocument/documentSymbol", params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request document symbols: %w", err)
+	}
+
+	if resp == nil || len(resp.Result) == 0 || string(resp.Result) == "null" {
+		return []protocol.DocumentSymbol{}, nil
+	}
+
+	var symbols []protocol.DocumentSymbol
+	if err := resp.ParseResult(&symbols); err != nil {
+		// Try parsing as SymbolInformation array (older LSP servers)
+		var symbolInfos []protocol.SymbolInformation
+		if err2 := resp.ParseResult(&symbolInfos); err2 == nil {
+			// Convert SymbolInformation to DocumentSymbol
+			for _, si := range symbolInfos {
+				symbols = append(symbols, protocol.DocumentSymbol{
+					Name:           si.Name,
+					Kind:           si.Kind,
+					Range:          si.Location.Range,
+					SelectionRange: si.Location.Range,
+				})
+			}
+			return symbols, nil
+		}
+		return nil, fmt.Errorf("failed to decode document symbols: %w", err)
+	}
+
+	return symbols, nil
+}
+
+func (c *GoplsClient) GetWorkspaceSymbols(query string) ([]protocol.SymbolInformation, error) {
+	log.Printf("🔍 Searching workspace symbols with query: %s", query)
+
+	params := map[string]any{
+		"query": query,
+	}
+
+	resp, err := c.call("workspace/symbol", params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request workspace symbols: %w", err)
+	}
+
+	if resp == nil || len(resp.Result) == 0 || string(resp.Result) == "null" {
+		return []protocol.SymbolInformation{}, nil
+	}
+
+	var symbols []protocol.SymbolInformation
+	if err := resp.ParseResult(&symbols); err != nil {
+		return nil, fmt.Errorf("failed to decode workspace symbols: %w", err)
+	}
+
+	return symbols, nil
+}
+
+func (c *GoplsClient) GetImplementations(uri string, line, character int) ([]protocol.Location, error) {
+	log.Printf("🔍 Requesting implementations for %s position L%d:C%d", uri, line, character)
+
+	if err := c.DidOpen(uri, "go", ""); err != nil {
+		log.Printf("⚠️ Warning opening document: %v", err)
+	}
+
+	time.Sleep(100 * time.Millisecond)
+
+	params := protocol.TextDocumentPositionParams{
+		TextDocument: protocol.TextDocumentIdentifier{
+			URI: uri,
+		},
+		Position: protocol.Position{
+			Line:      line,
+			Character: character,
+		},
+	}
+
+	resp, err := c.call("textDocument/implementation", params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to request implementations: %w", err)
+	}
+
+	if resp == nil || len(resp.Result) == 0 || string(resp.Result) == "null" {
+		return []protocol.Location{}, nil
+	}
+
+	var locations []protocol.Location
+	if err := resp.ParseResult(&locations); err != nil {
+		// Try parsing as single location
+		var location protocol.Location
+		if err2 := resp.ParseResult(&location); err2 == nil {
+			return []protocol.Location{location}, nil
+		}
+		return nil, fmt.Errorf("failed to decode implementations: %w", err)
+	}
+
+	return locations, nil
 }

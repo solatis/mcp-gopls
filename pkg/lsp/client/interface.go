@@ -1,7 +1,7 @@
 package client
 
 import (
-	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/protocol"
+	"github.com/solatis/mcp-gopls/pkg/lsp/protocol"
 )
 
 // LSPClient définit l'interface pour un client LSP
@@ -25,4 +25,9 @@ type LSPClient interface {
 	// Support avancé
 	GetHover(uri string, line, character int) (string, error)
 	GetCompletion(uri string, line, character int) ([]string, error)
+
+	// Symbol navigation
+	GetDocumentSymbols(uri string) ([]protocol.DocumentSymbol, error)
+	GetWorkspaceSymbols(query string) ([]protocol.SymbolInformation, error)
+	GetImplementations(uri string, line, character int) ([]protocol.Location, error)
 }

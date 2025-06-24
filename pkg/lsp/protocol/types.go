@@ -58,3 +58,53 @@ const (
 	SeverityInfo    DiagnosticSeverity = 3
 	SeverityHint    DiagnosticSeverity = 4
 )
+
+// SymbolKind represents the kind of a symbol
+type SymbolKind int
+
+const (
+	SKFile          SymbolKind = 1
+	SKModule        SymbolKind = 2
+	SKNamespace     SymbolKind = 3
+	SKPackage       SymbolKind = 4
+	SKClass         SymbolKind = 5
+	SKMethod        SymbolKind = 6
+	SKProperty      SymbolKind = 7
+	SKField         SymbolKind = 8
+	SKConstructor   SymbolKind = 9
+	SKEnum          SymbolKind = 10
+	SKInterface     SymbolKind = 11
+	SKFunction      SymbolKind = 12
+	SKVariable      SymbolKind = 13
+	SKConstant      SymbolKind = 14
+	SKString        SymbolKind = 15
+	SKNumber        SymbolKind = 16
+	SKBoolean       SymbolKind = 17
+	SKArray         SymbolKind = 18
+	SKObject        SymbolKind = 19
+	SKKey           SymbolKind = 20
+	SKNull          SymbolKind = 21
+	SKEnumMember    SymbolKind = 22
+	SKStruct        SymbolKind = 23
+	SKEvent         SymbolKind = 24
+	SKOperator      SymbolKind = 25
+	SKTypeParameter SymbolKind = 26
+)
+
+// DocumentSymbol represents programming constructs like variables, classes, interfaces etc.
+type DocumentSymbol struct {
+	Name           string           `json:"name"`
+	Detail         string           `json:"detail,omitempty"`
+	Kind           SymbolKind       `json:"kind"`
+	Range          Range            `json:"range"`
+	SelectionRange Range            `json:"selectionRange"`
+	Children       []DocumentSymbol `json:"children,omitempty"`
+}
+
+// SymbolInformation represents information about programming constructs like variables, classes, interfaces etc.
+type SymbolInformation struct {
+	Name          string     `json:"name"`
+	Kind          SymbolKind `json:"kind"`
+	Location      Location   `json:"location"`
+	ContainerName string     `json:"containerName,omitempty"`
+}

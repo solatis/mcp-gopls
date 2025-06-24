@@ -6,11 +6,9 @@ A Model Context Protocol (MCP) server that allows AI assistants like Claude to i
 
 This MCP server helps AI assistants to:
 
-- Use LSP to analyze Go code
-- Navigate to definitions and find references
-- Check code diagnostics
-- Get hover information for symbols
-- Get completion suggestions
+- Use LSP to analyze Go code with minimal context usage
+- Navigate to definitions and find references instantly
+- Check code diagnostics without running builds
 
 ## Architecture
 
@@ -22,8 +20,7 @@ The server communicates with [gopls](https://github.com/golang/tools/tree/master
 
 - **LSP Integration**: Connection to Go's Language Server Protocol for code analysis
 - **Code Navigation**: Finding definitions and references in the code
-- **Code Quality**: Getting diagnostics and errors
-- **Advanced Information**: Hover information and completion suggestions
+- **Code Quality**: Getting diagnostics and errors in real-time
 
 ## Project Structure
 
@@ -42,7 +39,7 @@ The server communicates with [gopls](https://github.com/golang/tools/tree/master
 ## Installation
 
 ```bash
-go install github.com/hloiseaufcms/mcp-gopls/cmd/mcp-gopls@latest
+go install github.com/solatis/mcp-gopls/cmd/mcp-gopls@latest
 ```
 
 ## Add to Cursor
@@ -59,36 +56,52 @@ go install github.com/hloiseaufcms/mcp-gopls/cmd/mcp-gopls@latest
 
 ## MCP Tools
 
-The MCP server provides the following tools:
+The MCP server provides the following LSP-powered tools for efficient Go code analysis:
 
 | Tool | Description |
 |-------|-------------|
-| `go_to_definition` | Navigate to the definition of a symbol |
-| `find_references` | Find all references to a symbol |
-| `check_diagnostics` | Get diagnostics for a file |
-| `get_hover_info` | Get detailed information about a symbol |
-| `get_completion` | Get completion suggestions at a position |
-| `analyze_coverage` | Analyze test coverage for Go code |
+| `go_to_definition` | Navigate instantly to where any symbol (function, type, variable) is defined. Much faster and more accurate than text search. |
+| `find_references` | Find all usages of a symbol across the entire codebase. Essential for understanding code impact before making changes. |
+| `check_diagnostics` | Get all compile errors, type errors, and linting issues without running builds. The fastest way to verify code correctness. |
+| `document_symbol` | Get a complete hierarchical outline of all symbols in a file. 10-100x faster than reading the entire file. |
+| `workspace_symbol` | Search for any symbol across the entire project instantly. Supports fuzzy matching and understands Go syntax. |
+| `list_interface_implementation` | Find all types that implement an interface, or find which interface a method implements. Critical for Go's interface-based design. |
 
 ## Usage Example
 
 Using the server with AI assistants that support MCP:
 
 ```Markdown
-# Ask the AI to get information about the code
-Can you find the definition of the `ServeStdio` function in this project?
+# Navigate to definitions instantly
+Where is the ServeStdio function defined?
 
-# Ask for diagnostics
+# Find all usages efficiently  
+Show me everywhere the Context type is used in this project
+
+# Check for errors without building
 Are there any errors in my main.go file?
 
-# Ask for information about a symbol
-What does the Context.WithTimeout function do in Go?
+# Understand code structure
+What's the structure of the server.go file?
+
+# Search across the project
+Where is the MCPServer type defined in this codebase?
+
+# Understand interfaces
+What types implement the LSPClient interface?
 ```
+
+## Why Use These LSP Tools?
+
+1. **Reduced Token Usage**: LSP tools provide precise results without reading entire files
+2. **Better Accuracy**: Understands Go's type system, imports, and syntax
+3. **Faster Analysis**: Instant results compared to multiple grep/search operations
+4. **Lower Costs**: Less context means fewer tokens and reduced API costs
 
 ## Development
 
 ```bash
-git clone https://github.com/hloiseaufcms/mcp-gopls.git
+git clone https://github.com/solatis/mcp-gopls.git
 cd mcp-gopls
 go mod tidy
 go build -o mcp-gopls cmd/mcp-gopls/main.go

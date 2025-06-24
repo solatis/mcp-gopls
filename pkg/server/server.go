@@ -10,8 +10,8 @@ import (
 
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/hloiseaufcms/mcp-gopls/pkg/lsp/client"
-	"github.com/hloiseaufcms/mcp-gopls/pkg/tools"
+	"github.com/solatis/mcp-gopls/pkg/lsp/client"
+	"github.com/solatis/mcp-gopls/pkg/tools"
 )
 
 type Service struct {

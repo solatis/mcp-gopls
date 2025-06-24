@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/hloiseaufcms/mcp-gopls/pkg/server"
+	"github.com/solatis/mcp-gopls/pkg/server"
 )
 
 func main() {
